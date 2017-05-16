@@ -1,17 +1,12 @@
-require "pundit"
-require "pundit/rspec"
+require "pundit_pure"
+require "pundit_pure/rspec"
 
 require "rack"
 require "rack/test"
 require "pry"
-require "active_support"
-require "active_support/core_ext"
-require "active_model/naming"
-require "action_controller/metal/strong_parameters"
+require 'ostruct'
 
-I18n.enforce_available_locales = false
-
-module PunditSpecHelper
+module PunditPureSpecHelper
   extend RSpec::Matchers::DSL
 
   matcher :be_truthy do
@@ -22,7 +17,7 @@ module PunditSpecHelper
 end
 
 RSpec.configure do |config|
-  config.include PunditSpecHelper
+  config.include PunditPureSpecHelper
 end
 
 class PostPolicy < Struct.new(:user, :post)
@@ -43,18 +38,6 @@ class PostPolicy < Struct.new(:user, :post)
   def show?
     true
   end
-
-  def permitted_attributes
-    if post.user == user
-      [:title, :votes]
-    else
-      [:votes]
-    end
-  end
-
-  def permitted_attributes_for_revise
-    [:body]
-  end
 end
 
 class Post < Struct.new(:user)
@@ -73,10 +56,6 @@ end
 
 module Customer
   class Post < Post
-    def model_name
-      OpenStruct.new(param_key: "customer_post")
-    end
-
     def policy_class
       PostPolicy
     end
@@ -92,20 +71,22 @@ class CommentPolicy < Struct.new(:user, :comment)
 end
 
 class Comment
-  extend ActiveModel::Naming
+  def self.policy_class
+    CommentPolicy
+  end
 end
 
 class CommentsRelation
+  def self.policy_class
+    CommentPolicy
+  end
+
   def initialize(empty = false)
     @empty = empty
   end
 
   def blank?
     @empty
-  end
-
-  def model_name
-    Comment.model_name
   end
 end
 
@@ -152,9 +133,9 @@ class DenierPolicy < Struct.new(:user, :record)
 end
 
 class Controller
-  include Pundit
+  include PunditPure
   # Mark protected methods public so they may be called in test
-  public(*Pundit.protected_instance_methods)
+  public(*PunditPure.protected_instance_methods)
 
   attr_reader :current_user, :params
 
@@ -178,7 +159,7 @@ end
 
 class PostFourFiveSix < Struct.new(:user); end
 
-class CommentFourFiveSix; extend ActiveModel::Naming; end
+class CommentFourFiveSix; end
 
 module ProjectOneTwoThree
   class CommentFourFiveSixPolicy < Struct.new(:user, :post); end
@@ -191,7 +172,11 @@ module ProjectOneTwoThree
 
   class TagFourFiveSixPolicy < Struct.new(:user, :tag); end
 
-  class AvatarFourFiveSix; extend ActiveModel::Naming; end
+  class AvatarFourFiveSix
+    def self.policy_class
+      AvatarFourFiveSixPolicy
+    end
+  end
 
   class AvatarFourFiveSixPolicy < Struct.new(:user, :avatar); end
 end

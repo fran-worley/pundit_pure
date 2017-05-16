@@ -14,7 +14,7 @@ Please try to answer the following questions in your bug report:
 - What happened instead?
 
 Make sure to include as much relevant information as possible. Ruby version,
-Pundit version, OS version and any stack traces you have are very valuable.
+PunditPure version, OS version and any stack traces you have are very valuable.
 
 ## Pull Requests
 

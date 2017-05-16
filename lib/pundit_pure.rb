@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-require "pundit/version"
-require "pundit/policy_finder"
-require "active_support/concern"
-require "active_support/core_ext/string/inflections"
-require "active_support/core_ext/object/blank"
-require "active_support/core_ext/module/introspection"
-require "active_support/dependencies/autoload"
+require "pundit_pure/version"
+require "pundit_pure/policy_finder"
+# require "active_support/concern"
+# require "active_support/core_ext/string/inflections"
+# require "active_support/core_ext/object/blank"
+# require "active_support/core_ext/module/introspection"
+# require "active_support/dependencies/autoload"
 
 # @api public
-module Pundit
+module PunditPure
   SUFFIX = "Policy".freeze
 
   # @api private
@@ -48,7 +48,7 @@ module Pundit
   # Error that will be raised if a policy or policy scope is not defined.
   class NotDefinedError < Error; end
 
-  extend ActiveSupport::Concern
+  # extend ActiveSupport::Concern
 
   class << self
     # Retrieves the policy for the given record, initializing it with the
@@ -122,14 +122,14 @@ module Pundit
     end
   end
 
-  included do
-    helper Helper if respond_to?(:helper)
-    if respond_to?(:helper_method)
-      helper_method :policy
-      helper_method :pundit_policy_scope
-      helper_method :pundit_user
-    end
-  end
+  # included do
+  #   helper Helper if respond_to?(:helper)
+  #   if respond_to?(:helper_method)
+  #     helper_method :policy
+  #     helper_method :pundit_policy_scope
+  #     helper_method :pundit_user
+  #   end
+  # end
 
 protected
 
@@ -222,7 +222,7 @@ protected
   # @param record [Object] the object we're retrieving the policy for
   # @return [Object, nil] instance of policy class with query methods
   def policy(record)
-    policies[record] ||= Pundit.policy!(pundit_user, record)
+    policies[record] ||= PunditPure.policy!(pundit_user, record)
   end
 
   # Retrieves a set of permitted attributes from the policy by instantiating
@@ -236,16 +236,16 @@ protected
   # @param action [Symbol, String] the name of the action being performed on the record (e.g. `:update`).
   #   If omitted then this defaults to the Rails controller action name.
   # @return [Hash{String => Object}] the permitted attributes
-  def permitted_attributes(record, action = params[:action])
-    param_key = PolicyFinder.new(record).param_key
-    policy = policy(record)
-    method_name = if policy.respond_to?("permitted_attributes_for_#{action}")
-      "permitted_attributes_for_#{action}"
-    else
-      "permitted_attributes"
-    end
-    params.require(param_key).permit(*policy.public_send(method_name))
-  end
+  # def permitted_attributes(record, action = params[:action])
+  #   param_key = PolicyFinder.new(record).param_key
+  #   policy = policy(record)
+  #   method_name = if policy.respond_to?("permitted_attributes_for_#{action}")
+  #     "permitted_attributes_for_#{action}"
+  #   else
+  #     "permitted_attributes"
+  #   end
+  #   params.require(param_key).permit(*policy.public_send(method_name))
+  # end
 
   # Cache of policies. You should not rely on this method.
   #
@@ -273,6 +273,6 @@ protected
 private
 
   def pundit_policy_scope(scope)
-    policy_scopes[scope] ||= Pundit.policy_scope!(pundit_user, scope)
+    policy_scopes[scope] ||= PunditPure.policy_scope!(pundit_user, scope)
   end
 end

@@ -1,49 +1,11 @@
-# Pundit
+# PunditPure
 
-[![Build Status](https://secure.travis-ci.org/elabs/pundit.svg?branch=master)](https://travis-ci.org/elabs/pundit)
-[![Code Climate](https://codeclimate.com/github/elabs/pundit.svg)](https://codeclimate.com/github/elabs/pundit)
-[![Inline docs](http://inch-ci.org/github/elabs/pundit.svg?branch=master)](http://inch-ci.org/github/elabs/pundit)
-[![Gem Version](https://badge.fury.io/rb/pundit.svg)](http://badge.fury.io/rb/pundit)
-
-Pundit provides a set of helpers which guide you in leveraging regular Ruby
-classes and object oriented design patterns to build a simple, robust and
-scaleable authorization system.
-
-Links:
-
-- [API documentation](http://www.rubydoc.info/gems/pundit)
-- [Source Code](https://github.com/elabs/pundit)
-- [Contributing](https://github.com/elabs/pundit/blob/master/CONTRIBUTING.md)
-- [Code of Conduct](https://github.com/elabs/pundit/blob/master/CODE_OF_CONDUCT.md)
-
-Sponsored by:
-
-[<img src="http://d3cv91luii1z1d.cloudfront.net/logo-gh.png" alt="Elabs" height="50px"/>](http://elabs.se)
+[Pundit](https://github.com/elabs/pundit) minus the rails/ active support dependencies!
+Designed for use with other ruby frameworks such as sinatra, hanami, trailblazer etc.
 
 ## Installation
 
-``` ruby
-gem "pundit"
-```
 
-Include Pundit in your application controller:
-
-``` ruby
-class ApplicationController < ActionController::Base
-  include Pundit
-  protect_from_forgery
-end
-```
-
-Optionally, you can run the generator, which will set up an application policy
-with some useful defaults for you:
-
-``` sh
-rails g pundit:install
-```
-
-After generating your application policy, restart the Rails server so that Rails
-can pick up any classes in the new `app/policies/` directory.
 
 ## Policies
 
